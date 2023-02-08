@@ -1,5 +1,9 @@
 package jm.task.core.jdbc.util;
 
+import jm.task.core.jdbc.model.User;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 import java.sql.*;
 import java.util.Collections;
 import java.util.Map;
@@ -66,5 +70,16 @@ public class Util {
 
         return preparedStatement;
     }
+
+    public static SessionFactory getFactory() {
+        return new Configuration()
+                .configure("hibernate.cfg.xml")
+                .addAnnotatedClass(User.class)
+                .buildSessionFactory();
+    }
+
+
+
+
     // реализуйте настройку соеденения с БД
 }
