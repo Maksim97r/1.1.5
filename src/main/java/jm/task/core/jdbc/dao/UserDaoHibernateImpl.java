@@ -4,12 +4,10 @@ import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
 
-import javax.persistence.EntityManager;
-import javax.swing.text.html.parser.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDaoHibernateImpl extends Util implements UserDao {
+public class UserDaoHibernateImpl implements UserDao {
     public UserDaoHibernateImpl() {
 
     }
@@ -17,8 +15,8 @@ public class UserDaoHibernateImpl extends Util implements UserDao {
 
     @Override
     public void createUsersTable() {
-        Session session = getFactory().getCurrentSession();
-        try {
+        Session session = Util.getFactory().getCurrentSession();
+        try (session) {
             session.beginTransaction();
             session.createSQLQuery("CREATE TABLE IF NOT EXISTS `pred_progect1`.`user` (\n" +
                     "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
@@ -31,18 +29,14 @@ public class UserDaoHibernateImpl extends Util implements UserDao {
         } catch (Exception e) {
             session.getTransaction().rollback();
             e.printStackTrace();
-
-        } finally {
-            session.close();
-            getFactory().close();
         }
     }
 
     @Override
     public void dropUsersTable() {
-        Session session = getFactory().getCurrentSession();
+        Session session = Util.getFactory().getCurrentSession();
 
-        try {
+        try (session) {
             session.beginTransaction();
             session.createSQLQuery("DROP TABLE IF EXISTS user;").executeUpdate();
             session.getTransaction().commit();
@@ -50,19 +44,15 @@ public class UserDaoHibernateImpl extends Util implements UserDao {
         } catch (Exception e) {
             session.getTransaction().rollback();
             e.printStackTrace();
-
-        } finally {
-            session.close();
-            getFactory().close();
         }
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
 
-        Session session = getFactory().getCurrentSession();
+        Session session = Util.getFactory().getCurrentSession();
 
-        try {
+        try (session) {
             User newUser = new User(name, lastName, age);
             session.beginTransaction();
             session.save(newUser);
@@ -71,19 +61,15 @@ public class UserDaoHibernateImpl extends Util implements UserDao {
         } catch (Exception e) {
             session.getTransaction().rollback();
             e.printStackTrace();
-
-        } finally {
-            session.close();
-            getFactory().close();
         }
     }
 
     @Override
     public void removeUserById(long id) {
 
-        Session session = getFactory().getCurrentSession();
+        Session session = Util.getFactory().getCurrentSession();
 
-        try {
+        try (session) {
             session.beginTransaction();
             User newUser = session.get(User.class, id);
             session.delete(newUser);
@@ -92,19 +78,15 @@ public class UserDaoHibernateImpl extends Util implements UserDao {
         } catch (Exception e) {
             session.getTransaction().rollback();
             e.printStackTrace();
-
-        } finally {
-            session.close();
-            getFactory().close();
         }
     }
 
     @Override
     public List<User> getAllUsers() {
-        Session session = getFactory().getCurrentSession();
+        Session session = Util.getFactory().getCurrentSession();
         List<User> allUser = new ArrayList<>();
 
-        try {
+        try (session) {
             session.beginTransaction();
             allUser = session.createQuery("from User")
                     .getResultList();
@@ -113,29 +95,22 @@ public class UserDaoHibernateImpl extends Util implements UserDao {
         } catch (Exception e) {
             session.getTransaction().rollback();
             e.printStackTrace();
-
-        } finally {
-            session.close();
-            getFactory().close();
         }
+
         return allUser;
     }
 
     @Override
     public void cleanUsersTable() {
-        Session session = getFactory().getCurrentSession();
+        Session session = Util.getFactory().getCurrentSession();
 
-        try {
+        try (session) {
             session.beginTransaction();
             session.createQuery("DELETE FROM User").executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
             e.printStackTrace();
-
-        } finally {
-            session.close();
-            getFactory().close();
         }
     }
 }

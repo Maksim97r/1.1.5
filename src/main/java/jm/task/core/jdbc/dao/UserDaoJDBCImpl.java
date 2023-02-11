@@ -6,7 +6,7 @@ import jm.task.core.jdbc.util.Util;
 import java.sql.*;
 import java.util.*;
 
-public class UserDaoJDBCImpl extends Util implements UserDao {
+public class UserDaoJDBCImpl implements UserDao {
 
 
     public UserDaoJDBCImpl() {
@@ -29,7 +29,7 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) throws SQLException {
-        executeUpdate(
+        Util.executeUpdate(
                 "INSERT INTO user (name, lastName, age) VALUES (?, ?, ?)",
                 Map.of(1, name, 2, lastName, 3, age));
     }
